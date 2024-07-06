@@ -1,0 +1,58 @@
+{
+    "Item1": {
+        "DestinationID": {
+            "S": "1"
+        },
+        "Name": {
+            "S": "Paris"
+        },
+        "Country": {
+            "S": "France"
+        },
+        "Attractions": {
+            "L": [
+                {"S": "Eiffel Tower"},
+                {"S": "Louvre Museum"},
+                {"S": "Notre-Dame Cathedral"}
+            ]
+        },
+        "BestTimeToVisit": {
+            "S": "April to June"
+        },
+        "Activities": {
+            "L": [
+                {"S": "Sightseeing"},
+                {"S": "Gourmet Food"},
+                {"S": "Art"}
+            ]
+        }
+    },
+    "Item2": {
+        "DestinationID": {
+            "S": "2"
+        },
+        "Name": {
+            "S": "Kyoto"
+        },
+        "Country": {
+            "S": "Japan"
+        },
+        "Attractions": {
+            "L": [
+                {"S": "Fushimi Inari Shrine"},
+                {"S": "Kinkaku-ji"},
+                {"S": "Arashiyama Bamboo Grove"}
+            ]
+        },
+        "BestTimeToVisit": {
+            "S": "March to May"
+        },
+        "Activities": {
+            "L": [
+                {"S": "Temple Visits"},
+                {"S": "Tea Ceremonies"},
+                {"S": "Cherry Blossom Viewing"}
+            ]
+        }
+    }
+}
