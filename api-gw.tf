@@ -11,7 +11,7 @@ resource "aws_api_gateway_resource" "destinations" {
   parent_id = aws_api_gateway_rest_api.api-gw.root_resource_id
   path_part = "destinations"
 }
-
+# ====== GET Method ======
 resource "aws_api_gateway_method" "get_all_destinations" {
   rest_api_id = aws_api_gateway_rest_api.api-gw.id
   resource_id = aws_api_gateway_resource.destinations.id
@@ -33,14 +33,6 @@ resource "aws_api_gateway_method_response" "GET_all_method_response_200" {
     resource_id = aws_api_gateway_resource.destinations.id
     http_method = aws_api_gateway_method.get_all_destinations.http_method
     status_code = "200"
-    response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers"     = true,
-    "method.response.header.Access-Control-Allow-Methods"     = true,
-    "method.response.header.Access-Control-Allow-Origin"      = true,
-    "method.response.header.Access-Control-Allow-Credentials" = true
-  }
-
-  
 }
 resource "aws_api_gateway_integration_response" "GET_all_integration_response" {
     rest_api_id = aws_api_gateway_rest_api.api-gw.id
@@ -48,6 +40,49 @@ resource "aws_api_gateway_integration_response" "GET_all_integration_response" {
     http_method = aws_api_gateway_method.get_all_destinations.http_method
     status_code = aws_api_gateway_method_response.GET_all_method_response_200.status_code
     depends_on = [aws_api_gateway_integration.GET_all_lambda_integration]
+    response_templates = {
+    "application/json" = <<EOF
+    #set($inputRoot = $input.path('$.body'))
+    {
+      \"statusCode\": 200,
+      \"body\": $inputRoot,
+      \"headers\": {
+        \"Content-Type\": \"application/json\"
+      }
+    }
+    EOF
+  }
+}
+# ====== POST Method ======
+
+resource "aws_api_gateway_method" "post_destination" {
+  rest_api_id = aws_api_gateway_rest_api.api-gw.id
+  resource_id = aws_api_gateway_resource.destinations.id
+  http_method = "POST"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "POST_lambda_integration" {
+    rest_api_id = aws_api_gateway_rest_api.api-gw.id
+    resource_id = aws_api_gateway_resource.destinations.id
+    http_method = aws_api_gateway_method.post_destination.http_method
+    integration_http_method = "POST"
+    type = "AWS_PROXY"
+    uri = aws_lambda_function.my_lambda.invoke_arn
+}
+resource "aws_api_gateway_method_response" "POST_method_response_200" {
+    rest_api_id = aws_api_gateway_rest_api.api-gw.id
+    resource_id = aws_api_gateway_resource.destinations.id
+    http_method = aws_api_gateway_method.post_destination.http_method
+    status_code = "200"
+}
+
+resource "aws_api_gateway_integration_response" "POST_integration_response" {
+    rest_api_id = aws_api_gateway_rest_api.api-gw.id
+    resource_id = aws_api_gateway_resource.destinations.id
+    http_method = aws_api_gateway_method.post_destination.http_method
+    status_code = aws_api_gateway_method_response.POST_method_response_200.status_code
+    depends_on = [aws_api_gateway_integration.POST_lambda_integration]
     response_templates = {
     "application/json" = <<EOF
     #set($inputRoot = $input.path('$.body'))
